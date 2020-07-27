@@ -27,7 +27,7 @@ import javafx.util.Duration;
 /**
  * FXML Controller class
  *
- * @author ranjith-suranga
+ * @author thariya
  */
 public class MainFormController implements Initializable { 
     
