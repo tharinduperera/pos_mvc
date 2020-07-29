@@ -1,4 +1,4 @@
-package dao;
+package dao.impl;
 
 import db.DBConnection;
 import util.*;
