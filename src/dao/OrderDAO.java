@@ -3,17 +3,21 @@ package dao;
 import entity.Order;
 import java.util.List;
 
-public interface OrderDAO{
+public interface OrderDAO extends SuperDAO{
+    @Override
+    List<Object> getAll();
 
-    public List<Order> getAllOrders();
+    @Override
+    Object find(Object key);
 
-    public Order findOrder(String oid);
+    @Override
+    boolean save(Object entity);
 
-    public boolean saveOrder(Order order);
+    @Override
+    boolean update(Object entity);
 
-    public boolean updateOrder(Order order);
-
-    public boolean deleteOrder(String oid);
+    @Override
+    boolean delete(Object key);
 
     public String getLastOrderId();
 }

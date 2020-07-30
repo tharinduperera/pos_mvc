@@ -3,17 +3,21 @@ package dao;
 import entity.Item;
 import java.util.List;
 
-public interface ItemDAO {
+public interface ItemDAO extends SuperDAO {
+    @Override
+    List<Object> getAll();
 
-    public List<Item> getAllItems();
+    @Override
+    Object find(Object key);
 
-    public Item findItem(String code);
+    @Override
+    boolean save(Object entity);
 
-    public boolean saveItem(Item item);
+    @Override
+    boolean update(Object entity);
 
-    public boolean updateItem(Item item);
-
-    public boolean deleteItem(String code);
+    @Override
+    boolean delete(Object key);
 
     public String getLastItemCode();
 }
