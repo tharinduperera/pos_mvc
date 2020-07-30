@@ -11,13 +11,33 @@ import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
 
-    public  List<Object> getAll(){
+
+    @Override
+    public String getLastCustomerId() {
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM CUSTOMER ORDER BY id DESC LIMIT 1");
+            if (!resultSet.next()) {
+                return null;
+            } else {
+                return resultSet.getString(1);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<Customer> getAll() {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM CUSTOMER");
-            List<Object>customers = new ArrayList<>();
-            while (resultSet.next()){
+            List<Customer> customers = new ArrayList<>();
+            while (resultSet.next()) {
                 customers.add(new Customer(resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3)));
@@ -28,16 +48,16 @@ public class CustomerDAOImpl implements CustomerDAO {
             return null;
         }
 
-
     }
 
-    public Object find(Object id){
+    @Override
+    public Customer find(String key) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE id = ?");
-            statement.setObject(1,id);
+            statement.setObject(1, key);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 return new Customer(resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3));
@@ -47,34 +67,32 @@ public class CustomerDAOImpl implements CustomerDAO {
             throwables.printStackTrace();
             return null;
         }
-
     }
 
-    public  boolean save(Object entity){
+    @Override
+    public boolean save(Customer entity) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("INSERT INTO CUSTOMER VALUES(?,?,?)");
-            Customer customer = (Customer) entity;
-            statement.setObject(1,customer.getId());
-            statement.setObject(2,customer.getName());
-            statement.setObject(3,customer.getAddress());
+            statement.setObject(1, entity.getId());
+            statement.setObject(2, entity.getName());
+            statement.setObject(3, entity.getAddress());
             return statement.executeUpdate() > 0;
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return false;
         }
-
     }
 
-    public  boolean update(Object entity){
+    @Override
+    public boolean update(Customer entity) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("UPDATE CUSTOMER SET name = ?, address = ? WHERE id = ?");
-            Customer customer = (Customer) entity;
-            statement.setObject(3,customer.getId());
-            statement.setObject(1,customer.getName());
-            statement.setObject(2,customer.getAddress());
+            statement.setObject(3, entity.getId());
+            statement.setObject(1, entity.getName());
+            statement.setObject(2, entity.getAddress());
             return statement.executeUpdate() > 0;
 
         } catch (SQLException throwables) {
@@ -83,11 +101,12 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
     }
 
-    public  boolean delete(Object key){
+    @Override
+    public boolean delete(String key) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("DELETE FROM CUSTOMER WHERE id = ?");
-            statement.setObject(1,key);
+            statement.setObject(1, key);
             return statement.executeUpdate() > 0;
 
         } catch (SQLException throwables) {
@@ -96,20 +115,5 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
     }
 
-    public  String getLastCustomerId() {
-        try {
-            Connection connection = DBConnection.getInstance().getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM CUSTOMER ORDER BY id DESC LIMIT 1");
-            if(!resultSet.next()){
-                return null;
-            }else {
-               return resultSet.getString(1);
-            }
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return null;
-        }
-    }
 }

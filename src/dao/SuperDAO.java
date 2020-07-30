@@ -1,20 +1,18 @@
 package dao;
 
-import entity.Item;
-
 import java.util.List;
 
-public interface SuperDAO {
+public interface SuperDAO<T,ID> {
 
-    List<Object> getAll();
+    List<T>getAll();
 
-    Object find(Object key);
+    T find(ID key);
 
-    boolean save(Object entity);
+    boolean save(T entity);
 
-    boolean update(Object entity);
+    boolean update(T entity);
 
-    boolean delete(Object key);
+    boolean delete(ID key);
 
 }
 

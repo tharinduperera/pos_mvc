@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDetailDAOImpl implements OrderDetailDAO {
-
-    public List<Object> getAll(){
+    @Override
+    public List<OrderDetail> getAll() {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM `OrderDetail`");
-            List<Object>orders = new ArrayList<>();
+            List<OrderDetail>orders = new ArrayList<>();
             while (resultSet.next()){
                 orders.add(new OrderDetail(resultSet.getString(1),
                         resultSet.getString(2),
@@ -31,13 +31,13 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
         }
     }
 
-    public Object find(Object key){
+    @Override
+    public OrderDetail find(OrderDetailPK key) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `OrderDetail` WHERE orderId = ? AND itemCode = ?");
-            OrderDetailPK orderDetailPK = (OrderDetailPK) key;
-            statement.setObject(1,orderDetailPK.getOrderId());
-            statement.setObject(1,orderDetailPK.getItemCode());
+            statement.setObject(1,key.getOrderId());
+            statement.setObject(1,key.getItemCode());
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
                 return new OrderDetail(resultSet.getString(1),
@@ -49,55 +49,51 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
-        }
-    }
+        }    }
 
-    public boolean save(Object entity){
+    @Override
+    public boolean save(OrderDetail entity) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("INSERT INTO `OrderDetail` VALUES(?,?,?,?)");
-            OrderDetail orderDetail = (OrderDetail) entity;
-            statement.setObject(1,orderDetail.getOrderDetailPK().getOrderId());
-            statement.setObject(2,orderDetail.getOrderDetailPK().getItemCode());
-            statement.setObject(3,orderDetail.getQty());
-            statement.setObject(4,orderDetail.getUnitPrice());
+            statement.setObject(1,entity.getOrderDetailPK().getOrderId());
+            statement.setObject(2,entity.getOrderDetailPK().getItemCode());
+            statement.setObject(3,entity.getQty());
+            statement.setObject(4,entity.getUnitPrice());
             return statement.executeUpdate() > 0;
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return false;
-        }
-    }
+        }    }
 
-    public boolean update(Object entity){
+    @Override
+    public boolean update(OrderDetail entity) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("UPDATE `OrderDetail` SET qty = ?, unitPrice = ? WHERE orderId = ? AND itemCode = ?");
-            OrderDetail orderDetail = (OrderDetail) entity;
-            statement.setObject(3,orderDetail.getOrderDetailPK().getOrderId());
-            statement.setObject(4,orderDetail.getOrderDetailPK().getItemCode());
-            statement.setObject(1,orderDetail.getQty());
-            statement.setObject(2,orderDetail.getUnitPrice());
+            statement.setObject(3,entity.getOrderDetailPK().getOrderId());
+            statement.setObject(4,entity.getOrderDetailPK().getItemCode());
+            statement.setObject(1,entity.getQty());
+            statement.setObject(2,entity.getUnitPrice());
             return statement.executeUpdate() > 0;
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return false;
-        }
-    }
+        }    }
 
-    public boolean delete(Object key){
+    @Override
+    public boolean delete(OrderDetailPK key) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("DELETE `OrderDetail` WHERE orderId = ? AND itemCode = ?");
-            OrderDetailPK orderDetailPK = (OrderDetailPK) key;
-            statement.setObject(1,orderDetailPK.getOrderId());
-            statement.setObject(2,orderDetailPK.getItemCode());
+            statement.setObject(1,key.getOrderId());
+            statement.setObject(2,key.getItemCode());
             return statement.executeUpdate() > 0;
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return false;
-        }
-    }
+        }    }
 }
