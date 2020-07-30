@@ -1,5 +1,5 @@
 package dao;
 
 public enum DAOType {
-    CUSTOMER , ITEM , ORDER ,ORDERDETAIl
+    CUSTOMER , ITEM , ORDER ,ORDERDETAIl, QUERY
 }
